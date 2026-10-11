@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1a24">
+  <meta name="description" content="Modern wall decor, personalized designs, and considered pieces for homes, offices, and meaningful occasions.">
+  <title>Dejavu Decor | Make Your Space Yours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="store.css">
+  <script src="data.js" defer></script>
+  <script src="store.js" defer></script>
+</head>
+<body data-page="home">
+  <div id="site-header"></div>
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow" data-hero-eyebrow></p>
+        <h1 data-hero-title></h1>
+        <p class="hero-description" data-hero-copy></p>
+        <div class="hero-actions">
+          <a class="button button-light" href="shop.html" data-hero-primary></a>
+          <a class="button button-outline" href="#custom" data-hero-secondary></a>
+        </div>
+        <div class="hero-promise" id="service">
+          <span><i class="fa-regular fa-gem" aria-hidden="true"></i> Premium quality</span>
+          <span><i class="fa-solid fa-pen-ruler" aria-hidden="true"></i> Custom designs</span>
+          <span><i class="fa-solid fa-truck" aria-hidden="true"></i> Fast delivery</span>
+          <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Thoughtful service</span>
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="../assets/W01.webp" alt="Sculptural natural wood wall decor in a considered interior" fetchpriority="high">
+        <div class="hero-caption"><span>01 / 06</span><span>Objects made personal</span></div>
+      </div>
+    </section>
+
+    <section class="section-wrap category-section" id="collections">
+      <div class="section-heading">
+        <div><p class="eyebrow">Explore our collections</p><h2>Shop by category</h2></div>
+        <a class="text-link" href="shop.html">View all <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="category-grid" data-category-grid></div>
+    </section>
+
+    <section class="section-wrap product-section" id="featured">
+      <div class="section-heading">
+        <div><p class="eyebrow">Handpicked for you</p><h2>Featured collection</h2></div>
+        <a class="text-link" href="shop.html">Shop all pieces <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="product-grid" data-featured-grid></div>
+    </section>
+
+    <section class="custom-section section-wrap" id="custom">
+      <div class="custom-copy">
+        <p class="eyebrow">Turn your ideas into reality</p>
+        <h2>Custom designs<br>for homes &amp; offices</h2>
+        <p>Your name, logo, quote, or unique idea: we make a design especially for your space.</p>
+        <a class="button button-light" href="product.html?id=custom-arabic-name">Create your custom design <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        <div class="custom-notes"><span>Unique designs</span><span>For homes &amp; offices</span><span>Made to order</span></div>
+      </div>
+      <img src="../assets/W03.webp" alt="A handcrafted wood organizer made for a personal space" loading="lazy">
+    </section>
+
+    <section class="section-wrap best-section" id="best-sellers">
+      <div class="section-heading">
+        <div><p class="eyebrow">Loved by our customers</p><h2>Best sellers</h2></div>
+        <a class="text-link" href="shop.html?sort=popular">Discover more <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="best-layout">
+        <div class="product-grid best-grid" data-bestseller-grid></div>
+        <aside class="review-feature" data-review-feature></aside>
+      </div>
+    </section>
+
+    <section class="service-band" aria-label="Dejavu service promises">
+      <div class="service-inner">
+        <div><i class="fa-regular fa-gem" aria-hidden="true"></i><span><b>Quality materials</b><small>Made to be kept</small></span></div>
+        <div><i class="fa-solid fa-truck" aria-hidden="true"></i><span><b>Careful delivery</b><small>Across Egypt</small></span></div>
+        <div><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span><b>Order with ease</b><small>Personal support</small></span></div>
+        <div><i class="fa-solid fa-headset" aria-hidden="true"></i><span><b>Here to help</b><small>Made personal</small></span></div>
+      </div>
+    </section>
+
+    <section class="newsletter section-wrap" id="newsletter">
+      <div><p class="eyebrow">A considered note, now and then</p><h2>Join our newsletter</h2><p>New collections, special offers, and ideas for making a space your own.</p></div>
+      <form data-newsletter-form><label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" type="email" placeholder="Your email address" required><button class="icon-button light-icon" type="submit" aria-label="Subscribe"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><p class="form-note" data-newsletter-note></p></form>
+    </section>
+    <section class="story-anchor" id="story" aria-label="About Dejavu Decor"></section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

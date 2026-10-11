@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1a24">
+  <meta name="description" content="Discover a considered decor piece from Dejavu Decor. Choose the details and make it yours.">
+  <title>Product | Dejavu Decor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="store.css">
+  <script src="data.js" defer></script>
+  <script src="store.js" defer></script>
+</head>
+<body data-page="product">
+  <div id="site-header"></div>
+  <main class="product-page section-wrap">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><a href="shop.html">Shop</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span data-product-category></span></nav>
+    <section class="product-detail" data-product-detail></section>
+    <section class="product-review-section" data-product-review></section>
+    <section class="related-section"><div class="section-heading"><div><p class="eyebrow">Consider these, too</p><h2>Related pieces</h2></div><a class="text-link" href="shop.html">Shop all <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div><div class="product-grid" data-related-grid></div></section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
