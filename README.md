@@ -6,6 +6,8 @@ A responsive FORGEX landing page for engineering and digital manufacturing, with
 
 - `index.html` contains the page sections, navigation, and RFQ form behavior.
 - `styles.css` contains the responsive FORGEX visual system and brand treatments.
+- `instant-quote/index.html` is the standalone instant-quote experience for laser cutting and 3D printing, linked from the main navigation and header CTA.
+- The instant-quote page keeps its supplied logos, pricing workbook sources, and setup notes in `instant-quote/`.
 - `assets/7.png` is the supplied FORGEX services poster; local logo and manufacturing image crops are derived from it.
 - `assets/logo.svg` is the original supplied FORGEX logo artwork.
 

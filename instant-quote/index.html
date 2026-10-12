@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FORGEX | Instant Manufacturing Quote</title>
+<style>
+:root{--black:#080808;--panel:#111;--panel2:#151515;--red:#e21b23;--white:#f5f5f2;--gray:#a1a1a1;--muted:#666;--line:#292929;--radius:4px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;color:var(--white);background:var(--black);font-family:Georgia,"Times New Roman",serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.shell{width:min(1120px,calc(100% - 40px));margin:auto}
+.mono,.eyebrow,nav,button,.step,.service-meta,.file-data,.field label,.status,.metric,.file-info{font-family:"Trebuchet MS",Arial,sans-serif}
+.topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:165px;padding:16px 0;border-bottom:1px solid var(--line);direction:ltr;background:rgba(8,8,8,.92)}
+.brand{position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);text-transform:uppercase}
+.brand img{width:360px;height:132px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(226,27,35,.3));transform:translateY(-1px)}
+.brand-name{color:var(--white);font:900 clamp(38px,3.2vw,70px) Arial,sans-serif;letter-spacing:.04em;line-height:1;text-shadow:0 10px 30px rgba(0,0,0,.5)}
+.brand-name span{color:#a5161c}
+.language-row{position:relative;z-index:3;height:0;display:flex;justify-content:flex-end}
+.language-toggle{position:relative;transform:translateY(8px);padding:9px 12px;border:1px solid var(--line);color:var(--gray);background:var(--black);cursor:pointer;font:700 11px Arial;text-transform:uppercase;transition:color .2s ease,border-color .2s ease,transform .2s ease}
+.language-toggle:hover{color:var(--white);border-color:var(--red);transform:translateY(7px)}
+.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--red);border-radius:var(--radius);padding:13px 18px;color:var(--white);background:var(--red);cursor:pointer;font:700 12px "Trebuchet MS",Arial;letter-spacing:.8px;text-transform:uppercase}
+.button.secondary{border-color:var(--line);background:transparent}.button:hover{filter:brightness(1.08)}
+.hero{position:relative;min-height:590px;display:grid;align-items:center;padding:82px 0}.hero:after{content:"01 / 05";position:absolute;right:0;bottom:45px;color:var(--muted);font:11px monospace;letter-spacing:2px}
+.eyebrow{color:var(--red);font-size:11px;font-weight:bold;letter-spacing:2.5px;text-transform:uppercase}
+h1,h2,h3,p{margin-top:0}h1{max-width:820px;margin:19px 0 22px;font-size:clamp(48px,8vw,100px);line-height:.91;letter-spacing:-4px}h1 em,h2 em{color:var(--red);font-style:normal}
+h2{margin-bottom:14px;font-size:clamp(32px,5vw,58px);line-height:.98;letter-spacing:-2px}h3{margin-bottom:10px;font-size:24px}p{color:var(--gray);line-height:1.65}
+.hero-copy{max-width:650px;font-size:19px;line-height:1.7}.hero-actions{display:flex;gap:12px;margin-top:30px}
+.section{position:relative;padding:92px 0;border-top:1px solid var(--line)}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:34px}.section-heading p{max-width:420px;margin-bottom:0}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}.step-card{min-height:160px;padding:24px;background:var(--black)}.step-number{color:var(--red);font:11px monospace;letter-spacing:2px}.step-card h3{margin-top:40px;font-size:18px}
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.service{min-height:250px;display:flex;flex-direction:column;justify-content:space-between;padding:30px;border:1px solid var(--line);background:linear-gradient(135deg,#151515,#0b0b0b)}
+.service-meta{color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.quote-section{background:#0d0d0d}.quote-layout{display:grid;grid-template-columns:1fr 1.35fr;gap:38px;align-items:start}.quote-panel{padding:28px;border:1px solid var(--line);background:var(--panel)}
+.progress{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:25px}.progress-step{padding-top:11px;border-top:2px solid var(--line);color:var(--muted);font:11px Arial}.progress-step.active{border-color:var(--red);color:var(--white)}
+.processes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.process{display:block;padding:15px;border:1px solid var(--line);background:#0c0c0c;cursor:pointer}.process.selected{border-color:var(--red);box-shadow:inset 3px 0 var(--red)}.process input{display:none}.process strong{display:block;font:700 14px Arial}.process small{display:block;margin-top:5px;color:var(--gray);font:12px Arial}
+.dropzone{padding:28px 15px;text-align:center;border:1px dashed #555}.upload-icon{width:36px;height:36px;display:grid;place-items:center;margin:0 auto 14px;border:1px solid var(--red);color:var(--red);font:bold 22px Arial}.dropzone strong{display:block;margin-bottom:7px;font-size:20px}.dropzone p{margin-bottom:18px;font:12px Arial}
+input[type=file]{display:none}.file-result{display:none;margin-top:12px;padding:12px;background:#191919;text-align:left;align-items:center;justify-content:space-between;gap:12px}.file-result.visible{display:flex}.file-data{min-width:0;font-size:12px}.file-name{display:block;overflow:hidden;color:var(--white);font-weight:bold;text-overflow:ellipsis;white-space:nowrap}.file-size{display:block;margin-top:5px;color:var(--gray)}.remove{border:0;color:var(--red);background:none;cursor:pointer;font-size:12px}
+.status{min-height:20px;margin:12px 0 0;color:var(--gray);font-size:12px}.status.error{color:var(--red)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:15px}.field label{display:block;margin-bottom:7px;color:var(--gray);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;padding:12px 16px;border:1px solid #2d2d2d;border-radius:8px;color:var(--white);background:rgba(15,15,15,.96);box-shadow:inset 0 1px 0 rgba(255,255,255,.02);transition:border-color .2s ease,box-shadow .2s ease}.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 1px rgba(226,27,35,.25)}.field select{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f5f5f2' stroke-linecap='round' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:10px 6px}.field textarea{min-height:80px;resize:vertical;border-radius:8px}.field select option{background:#111;color:var(--white)}
+.quote{display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}.quote.show{display:block}.quote-value{font:700 42px Arial}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:15px 0}.metric{padding:13px;background:#191919}.metric span{display:block;color:var(--gray);font-size:10px;text-transform:uppercase}.metric strong{display:block;margin-top:7px;font:18px Arial}.note{font-size:12px}
+.checkout{display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}.checkout.show{display:block}.checkout-card{padding:22px;border:1px solid var(--line);background:#101010}.review-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.review-item{padding:11px;background:#191919}.review-item span{display:block;color:var(--gray);font:10px Arial;text-transform:uppercase}.review-item strong{display:block;margin-top:5px;font:14px Arial}.review-total{display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line);font-size:22px}
+.checkline{display:flex;gap:9px;align-items:flex-start;margin:18px 0;color:var(--gray);font:12px Arial}.checkline input{width:auto;margin-top:2px}.hidden{display:none!important}
+.manual{display:none;margin-top:18px;padding:20px;border:1px solid var(--red);background:#1a0d0d}.manual.show{display:block}
+footer{display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font:11px Arial;letter-spacing:1px;text-align:center;text-transform:uppercase}
+.footer-tagline{color:var(--red);font-weight:700;letter-spacing:2px}
+.footer-design{color:var(--white)}
+.info-contact{padding:32px 0 18px;border-top:1px solid var(--line)}
+.info-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:18px}
+.info-card{padding:24px 22px;border:1px solid var(--line);background:linear-gradient(180deg,#121212,#0d0d0d)}
+.info-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.info-brand img{width:54px;height:54px;object-fit:contain}
+.info-brand .brand-name{font-size:28px;letter-spacing:.08em}
+.info-label{margin-bottom:14px;color:var(--red);font:700 11px Arial;letter-spacing:2px;text-transform:uppercase}
+.info-copy{margin:0;color:var(--gray);font-size:14px;line-height:1.7}
+.info-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.info-list li{color:var(--gray);font-size:14px;line-height:1.7}
+.info-list a{display:flex;align-items:center;gap:10px;color:var(--white)}
+.contact-icon{width:18px;height:18px;flex:0 0 18px;display:inline-grid;place-items:center;color:var(--red);font-size:14px;font-weight:700}
+.contact-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.8}
+body.rtl{direction:rtl;font-family:Tahoma,Arial,sans-serif}body.rtl .topbar{direction:ltr}body.rtl .section-heading,body.rtl .review-total{direction:rtl}body.rtl .hero:after{right:auto;left:0}body.rtl .field label{text-align:right}body.rtl .field select,body.rtl .field input,body.rtl .field textarea{text-align:right}body.rtl .info-grid{direction:rtl}
+@media(max-width:760px){.shell{width:min(100% - 28px,560px)}.topbar{min-height:135px}.language-toggle{position:absolute;left:0}.brand{left:50%;top:50%}.brand img{width:280px;height:102px}.brand-name{font-size:clamp(25px,7vw,40px);letter-spacing:.1em}.hero{min-height:530px;padding:70px 0}h1{letter-spacing:-2.5px}.section{padding:70px 0}.section-heading,.quote-layout{display:block}.section-heading p{margin-top:20px}.steps,.services,.grid,.info-grid{grid-template-columns:1fr}.step-card{min-height:auto}.step-card h3{margin-top:28px}.metrics{grid-template-columns:1fr 1fr}.actions{display:grid}.actions .button{width:100%}}
+@media(max-width:430px){.hero-actions,.processes{display:grid;grid-template-columns:1fr}.button{width:100%}.quote-panel{padding:16px}.progress{grid-template-columns:repeat(2,1fr)}.progress-step:last-child{grid-column:span 2}.review-list{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="topbar shell">
+<a class="brand" href="../index.html" aria-label="FORGEX home"><img src="logo in black only 2.svg" alt="FORGEX logo"></a>
+</header>
+<div class="language-row shell"><button class="language-toggle" id="language-toggle">عربي</button></div>
+
+<main id="top">
+<section class="hero shell">
+<div><div class="eyebrow">Precision Manufacturing, Without The Back-and-Forth</div>
+<h1>From digital file to <em>finished part.</em></h1>
+<p class="hero-copy">Upload your design, choose the material and quantity, and get a clear production estimate built around your part.</p>
+<div class="hero-actions"><a class="button" href="#quote">Start Your Quote</a><a class="button secondary" href="#how">How It Works</a></div></div>
+</section>
+
+<section class="section shell" id="how">
+<div class="section-heading"><div><div class="eyebrow">The FORGEX workflow</div><h2>A smarter path to <em>production.</em></h2></div><p>Choose your process, configure the part, review the estimate, and send a complete order request directly to FORGEX.</p></div>
+<div class="steps">
+<div class="step-card"><div class="step-number">01</div><h3>Upload Your File</h3></div>
+<div class="step-card"><div class="step-number">02</div><h3>Configure Your Part</h3></div>
+<div class="step-card"><div class="step-number">03</div><h3>Get Your Quote</h3></div>
+<div class="step-card"><div class="step-number">04</div><h3>Send to FORGEX</h3></div>
+</div>
+</section>
+
+<section class="section shell" id="services">
+<div class="section-heading"><div><div class="eyebrow">Manufacturing services</div><h2>Made around your <em>part.</em></h2></div><p>Clear online estimates for laser cutting and professional FDM 3D printing.</p></div>
+<div class="services">
+<article class="service"><div><div class="service-meta">01 / Laser</div><h3>Laser Cutting</h3><p>Configure material, thickness, color and quantity. The system calculates an estimated production price from the geometry and selected material.</p></div><a class="button" href="#quote" data-process="laser">Get Laser Quote</a></article>
+<article class="service"><div><div class="service-meta">02 / Additive</div><h3>3D Printing</h3><p>Upload STL, 3MF or OBJ and configure material, color, layer quality, infill and supports.</p></div><a class="button" href="#quote" data-process="printing">Get 3D Printing Quote</a></article>
+</div>
+</section>
+
+<section class="section quote-section" id="quote">
+<div class="shell quote-layout">
+<div class="quote-intro"><div class="eyebrow">Instant quotation</div><h2>A clear estimate, built from <em>your file.</em></h2><p>Choose a process, upload your file, and select the material and finish. The estimate is generated from the current FORGEX pricing configuration.</p><p class="note">If a file needs technical review, we send the complete request to FORGEX instead of showing an unreliable number.</p></div>
+<div class="quote-panel">
+<div class="progress"><div class="progress-step active">01 Upload</div><div class="progress-step">02 Configure</div><div class="progress-step">03 Quote</div><div class="progress-step">04 Send</div></div>
+<div class="processes">
+<label class="process selected"><input type="radio" name="process" value="laser" checked><strong>Laser Cutting</strong><small>DXF only</small></label>
+<label class="process"><input type="radio" name="process" value="printing"><strong>3D Printing</strong><small>STL / OBJ / 3MF</small></label>
+</div>
+<div class="dropzone" id="dropzone"><div class="upload-icon">+</div><strong>Upload your manufacturing file</strong><p id="formats">Supported: DXF only. The file is attached to the order for FORGEX review and is not used for geometry-based pricing.</p><label class="button secondary" for="file">Browse Files</label><input id="file" type="file" accept=".dxf"></div>
+<div class="file-result" id="file-result"><div class="file-data"><span class="file-name" id="file-name"></span><span class="file-size" id="file-size"></span></div><button class="remove" id="remove-file" type="button">Remove</button></div>
+<p class="status" id="status"></p>
+<div id="options" class="grid"></div>
+<div class="field"><label>Quantity</label><input id="quantity" type="number" min="1" max="10000" value="1"></div>
+<div class="field"><label>Additional Requirements</label><textarea id="notes" placeholder="Finish, tolerance, assembly, urgent delivery, special requirements..."></textarea></div>
+<div class="actions"><button class="button" id="calculate">Calculate Quote</button><button class="button secondary" id="reset">Reset</button></div>
+
+<div class="quote" id="quote-result">
+<div class="eyebrow">FORGEX Quote</div><div class="quote-value" id="price">-- EGP</div>
+<div class="metrics"><div class="metric"><span>Estimated Material</span><strong id="material-result">--</strong></div><div class="metric"><span>Estimated Production</span><strong id="time-result">--</strong></div></div>
+<p class="note"><b>Customer price:</b> The amount shown is the configured FORGEX customer price for the selected options. Production remains subject to final file validation where geometry or material compatibility requires review.</p>
+<div class="actions"><button class="button" id="continue">Continue to Customer Details</button></div>
+</div>
+
+<div class="manual" id="manual"><div class="eyebrow">Manual engineering review</div><h3>We need to review this file before pricing.</h3><p id="manual-message">The uploaded geometry could not be analyzed reliably.</p><button class="button" id="manual-whatsapp">Send Manual RFQ on WhatsApp</button></div>
+
+<div class="checkout" id="checkout">
+<div class="checkout-card"><div class="eyebrow">Customer details</div><h3>Where should we send the quotation?</h3>
+<div class="grid"><div class="field"><label>Full Name</label><input id="customer-name" required></div><div class="field"><label>Company</label><input id="customer-company"></div><div class="field"><label>Phone / WhatsApp</label><input id="customer-phone" required></div><div class="field"><label>Email</label><input id="customer-email" type="email"></div></div>
+<div class="field"><label>City</label><input id="customer-city"></div><div class="field"><label>Notes</label><textarea id="customer-notes"></textarea></div>
+<div class="review-list" id="review-list"></div><div class="review-total"><span>Total</span><strong id="review-total">-- EGP</strong></div>
+<label class="checkline"><input id="spec-confirmed" type="checkbox"> I confirm that the selected specifications and quantity are correct.</label>
+<div class="actions"><button class="button" id="send-order">Send Order</button><button class="button secondary" id="pay-now">Contact FORGEX</button></div><p class="status" id="checkout-status">Your order details will be sent securely without the uploaded file.</p>
+</div></div>
+</div>
+</div>
+</section>
+</main>
+<section class="info-contact shell" id="info-contact">
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-brand">
+        <img src="logo.svg" alt="FORGEX logo">
+        <div class="brand-name">FORGE<span>X</span></div>
+      </div>
+      <p class="info-copy"><strong>Engineering &amp; Manufacturing Solutions</strong></p>
+      <p class="info-copy">Digital manufacturing, rapid prototyping, and production services built around your digital files.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Services</div>
+      <ul class="info-list">
+        <li>Laser Cutting</li>
+        <li>3D Printing</li>
+        <li>Rapid Quoting</li>
+        <li>Production Support</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Contact</div>
+      <ul class="info-list">
+        <li><a href="tel:+201200915975"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg></span>Phone</a></li>
+        <li><a href="https://wa.me/201200915975" target="_blank" rel="noreferrer"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11.8 11.8 0 0 0 12.1 0C5.6 0 .3 5.3.3 11.8c0 2.1.6 4.2 1.7 6L.2 24l6.3-1.7a11.8 11.8 0 0 0 5.6 1.4h.1c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.2-3.5-8.4Z"/><path d="M8.1 6.9c.2-.4.4-.4.7-.4h.6c.2 0 .5.1.6.5l.8 2c.1.3.1.5-.1.7l-.5.7c-.2.2-.3.3-.1.6.7 1.3 1.8 2.4 3.1 3.1.3.2.4.1.6-.1l.7-.8c.2-.2.4-.2.7-.1l2 .9c.3.1.5.3.5.5s-.1 1.1-.5 1.5c-.4.4-1 .6-1.7.6-.6 0-2.3-.5-4-1.9-1.5-1.2-2.5-2.7-2.8-3.3-.3-.6-.8-2-.8-2.7 0-.7.3-1.2.6-1.8Z"/></svg></span>WhatsApp</a></li>
+        <li><a href="mailto:forgex.mfg@gmail.com"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2-2-2Z"/><path d="m22 6-10 7L2 6"/></svg></span>info@ForgeX.mfg.com</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=61592212388758" target="_blank" rel="noreferrer"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></span>Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/forgexmfg" target="_blank" rel="noreferrer"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z"/><path d="M2 9h4v12H2z"/><path d="M4 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/></svg></span>LinkedIn</a></li>
+        <li><a href="https://maps.app.goo.gl/716JuQxZuXcVTtUq7" target="_blank" rel="noreferrer"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Open location</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<footer class="shell" id="contact">
+  <div class="footer-tagline">DIGITIZE. <span class="footer-design">DESIGN.</span> DELIVER.</div>
+  <div>© 2026 FORGEX — Engineering &amp; Manufacturing Solutions.</div>
+</footer>
+
+<script>
+const FORGEX_WHATSAPP="201200915975";
+const FORGEX_EMAIL="forgex.mfg@gmail.com";
+const PAYMENT_URL="";
+const FORM_ENDPOINT="https://formsubmit.co/ajax/forgex.mfg@gmail.com";
+const CATALOG={"laser": {"mdf": {"name": "MDF", "density": 0.75, "priceKg": 220, "thicknesses": [2.5, 3.0, 4.0, 6.0, 9.0, 12.0, 18.0], "colors": ["Natural", "Black", "White"], "notes": "Laser-safe MDF; confirm supplier composition."}, "plywood": {"name": "Plywood", "density": 0.6, "priceKg": 330, "thicknesses": [3.0, 4.0, 6.0, 9.0, 12.0, 15.0, 18.0], "colors": ["Natural", "Birch", "White"], "notes": "Use only laser-compatible plywood."}, "acrylic": {"name": "Acrylic / PMMA", "density": 1.18, "priceKg": 650, "thicknesses": [2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0], "colors": ["Clear", "Black", "White", "Red", "Blue", "Yellow", "Green", "Orange", "Frosted"], "notes": "Cast/extruded availability may vary."}, "cardboard": {"name": "Cardboard", "density": 0.35, "priceKg": 160, "thicknesses": [1.0, 1.5, 2.0, 3.0], "colors": ["Natural", "White", "Black"], "notes": "Light-duty laser cutting."}, "paper": {"name": "Paper / Card", "density": 0.8, "priceKg": 180, "thicknesses": [0.3, 0.5, 0.8, 1.0], "colors": ["White", "Black", "Red", "Blue", "Natural"], "notes": "Price is material-equivalent estimate."}, "felt": {"name": "Felt", "density": 0.3, "priceKg": 420, "thicknesses": [1.0, 2.0, 3.0, 5.0], "colors": ["Black", "White", "Red", "Gray", "Beige"], "notes": "Fiber composition must be laser-safe."}, "leather": {"name": "Leather", "density": 0.9, "priceKg": 950, "thicknesses": [1.0, 1.5, 2.0, 3.0], "colors": ["Natural", "Black", "Brown", "Red"], "notes": "Natural leather only; composition must be confirmed."}, "eva": {"name": "EVA Foam", "density": 0.1, "priceKg": 480, "thicknesses": [2.0, 3.0, 5.0, 6.0, 10.0], "colors": ["Black", "White", "Red", "Blue", "Green"], "notes": "Must be laser-compatible grade; avoid PVC."}}, "printing": {"pla": {"name": "PLA", "density": 1.24, "priceKg": 650, "colors": ["Black", "White", "Red", "Blue", "Yellow", "Green", "Orange", "Gray", "Natural"], "notes": "General-purpose FDM."}, "pla_plus": {"name": "PLA+", "density": 1.24, "priceKg": 720, "colors": ["Black", "White", "Red", "Blue", "Gray", "Natural"], "notes": "Higher-toughness PLA variant."}, "matte_pla": {"name": "Matte PLA", "density": 1.24, "priceKg": 760, "colors": ["Black", "White", "Gray", "Beige", "Green", "Blue", "Red"], "notes": "Finish/color availability varies."}, "silk_pla": {"name": "Silk PLA", "density": 1.24, "priceKg": 900, "colors": ["Gold", "Silver", "Copper", "Red", "Blue", "Purple", "Green"], "notes": "Decorative finish."}, "wood_pla": {"name": "Wood PLA", "density": 1.2, "priceKg": 950, "colors": ["Natural", "Dark Wood", "Light Wood"], "notes": "Contains wood fibers; nozzle wear may apply."}, "petg": {"name": "PETG", "density": 1.27, "priceKg": 820, "colors": ["Black", "White", "Clear", "Red", "Blue", "Gray", "Natural"], "notes": "Functional/general-purpose."}, "abs": {"name": "ABS", "density": 1.04, "priceKg": 900, "colors": ["Black", "White", "Gray", "Red"], "notes": "Requires suitable enclosure/ventilation."}, "asa": {"name": "ASA", "density": 1.07, "priceKg": 1050, "colors": ["Black", "White", "Gray", "Red"], "notes": "Outdoor/UV-oriented material."}, "tpu": {"name": "TPU 95A", "density": 1.2, "priceKg": 1250, "colors": ["Black", "White", "Red", "Blue", "Natural"], "notes": "Flexible material."}, "nylon": {"name": "Nylon / PA", "density": 1.14, "priceKg": 1450, "colors": ["Black", "Natural", "White"], "notes": "Dry storage/printing conditions required."}, "pc": {"name": "Polycarbonate / PC", "density": 1.2, "priceKg": 1750, "colors": ["Clear", "Black", "White"], "notes": "High-temperature printing setup required."}, "petg_cf": {"name": "PETG-CF", "density": 1.3, "priceKg": 1650, "colors": ["Black", "Gray"], "notes": "Abrasion-resistant nozzle may be required."}, "pla_cf": {"name": "PLA-CF", "density": 1.25, "priceKg": 1500, "colors": ["Black", "Gray"], "notes": "Abrasion-resistant nozzle may be required."}, "other": {"name": "Other / Manual Review", "density": 1.1, "priceKg": 1000, "colors": ["Other"], "notes": "Requires manual technical confirmation."}}};
+const PRICING_CATALOG = {
+  laser: {
+    mdf: { name: "MDF", colors: ["Natural", "Black", "White"], thicknesses: [{ value: 3, label: "3 mm", pricePerM2: 220 }, { value: 6, label: "6 mm", pricePerM2: 300 }, { value: 9, label: "9 mm", pricePerM2: 390 }, { value: 12, label: "12 mm", pricePerM2: 420 }, { value: 18, label: "18 mm", pricePerM2: 520 }] },
+    plywood: { name: "Plywood", colors: ["Natural", "Birch", "White"], thicknesses: [{ value: 3, label: "3 mm", pricePerM2: 330 }, { value: 6, label: "6 mm", pricePerM2: 520 }, { value: 9, label: "9 mm", pricePerM2: 620 }, { value: 12, label: "12 mm", pricePerM2: 760 }, { value: 18, label: "18 mm", pricePerM2: 920 }] },
+    acrylic: { name: "Acrylic / PMMA", colors: ["Clear", "Black", "White", "Red", "Blue", "Yellow", "Green", "Orange", "Frosted"], thicknesses: [{ value: 2, label: "2 mm", pricePerM2: 650 }, { value: 3, label: "3 mm", pricePerM2: 750 }, { value: 4, label: "4 mm", pricePerM2: 860 }, { value: 5, label: "5 mm", pricePerM2: 980 }, { value: 6, label: "6 mm", pricePerM2: 1100 }, { value: 8, label: "8 mm", pricePerM2: 1320 }, { value: 10, label: "10 mm", pricePerM2: 1600 }] },
+    cardboard: { name: "Cardboard", colors: ["Natural", "White", "Black"], thicknesses: [{ value: 1, label: "1 mm", pricePerM2: 160 }, { value: 2, label: "2 mm", pricePerM2: 210 }, { value: 3, label: "3 mm", pricePerM2: 260 }] },
+    felt: { name: "Felt", colors: ["Black", "White", "Red", "Gray", "Beige"], thicknesses: [{ value: 1, label: "1 mm", pricePerM2: 420 }, { value: 2, label: "2 mm", pricePerM2: 470 }, { value: 3, label: "3 mm", pricePerM2: 540 }, { value: 5, label: "5 mm", pricePerM2: 620 }] },
+    leather: { name: "Leather", colors: ["Natural", "Black", "Brown", "Red"], thicknesses: [{ value: 1, label: "1 mm", pricePerM2: 950 }, { value: 2, label: "2 mm", pricePerM2: 1050 }, { value: 3, label: "3 mm", pricePerM2: 1200 }] },
+    eva: { name: "EVA Foam", colors: ["Black", "White", "Red", "Blue", "Green"], thicknesses: [{ value: 2, label: "2 mm", pricePerM2: 480 }, { value: 3, label: "3 mm", pricePerM2: 560 }, { value: 5, label: "5 mm", pricePerM2: 660 }, { value: 6, label: "6 mm", pricePerM2: 720 }, { value: 10, label: "10 mm", pricePerM2: 900 }] }
+  },
+  printing: {
+    pla: { name: "PLA", pricePerKg: 650, colors: ["Black", "White", "Red", "Blue", "Yellow", "Green", "Orange", "Gray", "Natural"] },
+    pla_plus: { name: "PLA+", pricePerKg: 720, colors: ["Black", "White", "Red", "Blue", "Yellow", "Green", "Orange", "Gray", "Natural"] },
+    petg: { name: "PETG", pricePerKg: 820, colors: ["Black", "White", "Clear", "Blue", "Gray", "Natural"] },
+    abs: { name: "ABS", pricePerKg: 900, colors: ["Black", "White", "Gray", "Blue", "Yellow"] },
+    asa: { name: "ASA", pricePerKg: 980, colors: ["Black", "White", "Gray", "Red", "Blue"] },
+    tpu: { name: "TPU", pricePerKg: 1250, colors: ["Black", "White", "Blue", "Red", "Clear"] },
+    nylon: { name: "Nylon / PA", pricePerKg: 1450, colors: ["Black", "White", "Gray"] },
+    pla_cf: { name: "PLA-CF", pricePerKg: 1700, colors: ["Black", "Gray"] }
+  }
+};
+const RULES={laser:{setup:85,labor:70,finish:45,margin:.20,minOrder:250},printing:{setup:55,labor:45,finish:45,margin:.20,minOrder:220}};
+let process="laser", file=null, lastQuote=null;
+let language="en";
+const $=id=>document.getElementById(id);
+
+const TRANSLATIONS={
+ "Home":"الرئيسية","How It Works":"طريقة العمل","Services":"الخدمات","Quote":"التسعير","Contact":"تواصل معنا",
+ "Precision Manufacturing, Without The Back-and-Forth":"تصنيع دقيق بدون تعقيد","From digital file to":"من الملف الرقمي إلى","finished part.":"قطعة جاهزة.","Upload your design, choose the material and quantity, and get a clear production estimate built around your part.":"ارفع التصميم، اختر الخامة والكمية، واحصل على تقدير واضح للتنفيذ حسب قطعتك.","A smarter path to":"طريق أذكى إلى","production.":"التصنيع.","Choose your process, configure the part, review the estimate, and send a complete order request directly to FORGEX.":"اختر العملية، اضبط مواصفات القطعة، راجع التقدير، وأرسل طلبًا كاملًا مباشرة إلى FORGEX.","Made around your":"مصمم حول","Clear online estimates for laser cutting and professional FDM 3D printing.":"تقديرات واضحة أونلاين للقطع بالليزر والطباعة الاحترافية بتقنية FDM.","A clear estimate, built from":"تقدير واضح مبني على","your file.":"ملفك.","Choose a process, upload your file, and select the material and finish. The estimate is generated from the current FORGEX pricing configuration.":"اختر العملية، ارفع الملف، وحدد الخامة والتشطيب. يتم إنشاء التقدير حسب إعدادات تسعير FORGEX الحالية.","If a file needs technical review, we send the complete request to FORGEX instead of showing an unreliable number.":"إذا احتاج الملف إلى مراجعة فنية، نرسل الطلب كاملًا إلى FORGEX بدلًا من عرض رقم غير دقيق.",
+ "Engineering & Manufacturing Solutions":"حلول الهندسة والتصنيع","Digital Manufacturing ":"التصنيع الرقمي ","Made Simple.":"بكل بساطة.",
+ "Upload your file, configure your material and requirements, and receive a transparent manufacturing quote built for your part.":"ارفع ملفك، اختر الخامة والمواصفات، واحصل على عرض سعر واضح ومخصص لقطعتك.",
+ "Start Your Quote":"ابدأ التسعير","The FORGEX workflow":"خطوات عمل FORGEX","From file to ":"من الملف إلى ","factory.":"المصنع.",
+ "A clear digital path. Choose the process, configure the part, review the exact quote, then send the order details directly to FORGEX.":"خطوات رقمية واضحة: اختر العملية، اضبط مواصفات القطعة، راجع السعر، ثم أرسل تفاصيل الطلب مباشرة إلى FORGEX.",
+ "Upload Your File":"ارفع ملفك","Configure Your Part":"اضبط مواصفات القطعة","Get Your Quote":"احصل على عرض السعر","Send to FORGEX":"أرسل إلى FORGEX",
+ "Manufacturing services":"خدمات التصنيع","Built for the ":"مصمم من أجل ","part.":"القطعة.",
+ "Fast online quotation for laser cutting and professional FDM 3D printing.":"تسعير سريع أونلاين للقطع بالليزر والطباعة الاحترافية بتقنية FDM.",
+ "Laser Cutting":"قطع بالليزر","3D Printing":"طباعة ثلاثية الأبعاد","Get Laser Quote":"احصل على سعر القطع بالليزر","Get 3D Printing Quote":"احصل على سعر الطباعة ثلاثية الأبعاد",
+ "Instant quotation":"عرض سعر فوري","From geometry to an ":"من التصميم إلى ","exact configured price.":"سعر دقيق حسب المواصفات.",
+ "Choose your manufacturing process, upload your file and configure the part. The displayed amount is the customer-facing quote generated from the current FORGEX pricing configuration.":"اختر عملية التصنيع، ارفع ملفك واضبط مواصفات القطعة. السعر المعروض هو السعر النهائي للعميل حسب إعدادات FORGEX الحالية.",
+ "If the geometry cannot be analyzed reliably, the request is sent to FORGEX for manual engineering review instead of showing a misleading price.":"إذا تعذر تحليل التصميم بدقة، يتم إرسال الطلب إلى FORGEX للمراجعة الهندسية بدلًا من عرض سعر غير دقيق.",
+ "01 Upload":"01 رفع الملف","02 Configure":"02 المواصفات","03 Quote":"03 التسعير","04 Send":"04 الإرسال",
+ "Upload your manufacturing file":"ارفع ملف التصنيع","Browse Files":"اختيار ملف","Remove":"حذف الملف","Quantity":"الكمية","Additional Requirements":"متطلبات إضافية",
+ "Finish, tolerance, assembly, urgent delivery, special requirements...":"التشطيب، السماحية، التجميع، التسليم العاجل، أو أي متطلبات خاصة...",
+ "Calculate Quote":"احسب السعر","Reset":"إعادة ضبط","FORGEX Quote":"عرض سعر FORGEX","Estimated Material":"وزن الخامة المتوقع","Estimated Production":"وقت التنفيذ المتوقع",
+ "Customer price:":"السعر للعميل:","The amount shown is the configured FORGEX customer price for the selected options. Production remains subject to final file validation where geometry or material compatibility requires review.":"المبلغ الظاهر هو السعر النهائي من FORGEX حسب الاختيارات المحددة. يخضع التنفيذ للمراجعة النهائية إذا احتاج التصميم أو توافق الخامة إلى تأكيد.",
+ "Continue to Customer Details":"المتابعة لبيانات العميل","Manual engineering review":"مراجعة هندسية يدوية","We need to review this file before pricing.":"نحتاج إلى مراجعة هذا الملف قبل التسعير.",
+ "The uploaded geometry could not be analyzed reliably.":"تعذر تحليل التصميم المرفوع بشكل موثوق.","Send Manual RFQ on WhatsApp":"إرسال طلب تسعير يدوي عبر واتساب",
+ "Customer details":"بيانات العميل","Where should we send the quotation?":"أين نرسل عرض السعر؟","Full Name":"الاسم بالكامل","Company":"الشركة","Phone / WhatsApp":"الهاتف / واتساب","City":"المدينة","Notes":"ملاحظات","Total":"الإجمالي",
+ "I confirm that the selected specifications and quantity are correct.":"أؤكد أن المواصفات والكمية المحددة صحيحة.","Send Order Details on WhatsApp":"إرسال تفاصيل الطلب عبر واتساب",
+ "Laser-safe MDF; confirm supplier composition.":"MDF مناسب للقطع بالليزر؛ يجب تأكيد التركيبة من المورد.","Use only laser-compatible plywood.":"استخدم خشبًا رقائقيًا مناسبًا للقطع بالليزر فقط.",
+ "Material":"الخامة","Color":"اللون","Thickness":"السمك","Finishing":"التشطيب","Standard":"قياسي","Premium":"ممتاز","Layer Height":"ارتفاع الطبقة","Infill":"نسبة الملء","Supports":"الدعامات",
+ "Automatic":"تلقائي","Required":"مطلوبة","Not Required":"غير مطلوبة"
+ ,"Supported: DXF / SVG. Max 50 MB. DXF/SVG geometry is analyzed automatically.":"الملفات المدعومة: DXF / SVG. الحد الأقصى 50 ميجابايت. يتم تحليل التصميم تلقائيًا.",
+ "Supported: DXF / SVG with automatic geometry analysis. Max 50 MB.":"الملفات المدعومة: DXF / SVG مع تحليل تلقائي للتصميم. الحد الأقصى 50 ميجابايت.",
+ "Supported: STL / OBJ with automatic geometry analysis. 3MF is accepted for manual review in this static build. Max 50 MB.":"الملفات المدعومة: STL / OBJ مع تحليل تلقائي للتصميم. ملفات 3MF متاحة للمراجعة اليدوية في هذه النسخة. الحد الأقصى 50 ميجابايت.",
+ "Select a file before calculating.":"اختر ملفًا قبل حساب السعر.","Manual engineering review required.":"مطلوب إجراء مراجعة هندسية يدوية.","Quote calculated successfully.":"تم حساب السعر بنجاح.","Quote reset.":"تمت إعادة ضبط التسعير.",
+ "Please enter your name and phone/WhatsApp.":"من فضلك أدخل الاسم ورقم الهاتف أو واتساب.","Please confirm the selected specifications first.":"من فضلك أكد المواصفات المحددة أولًا."
+};
+const REVERSE_TRANSLATIONS=Object.fromEntries(Object.entries(TRANSLATIONS).map(([en,ar])=>[ar,en]));
+function translatePage(){
+ const map=language==="ar"?TRANSLATIONS:REVERSE_TRANSLATIONS;
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ let node;
+ while(node=walker.nextNode()){
+   const value=node.nodeValue.trim();
+   if(map[value])node.nodeValue=node.nodeValue.replace(value,map[value]);
+ }
+ document.querySelectorAll("[placeholder]").forEach(input=>{const value=input.getAttribute("placeholder"),translated=map[value];if(translated)input.setAttribute("placeholder",translated);});
+ document.documentElement.lang=language;
+ document.body.classList.toggle("rtl",language==="ar");
+ $("language-toggle").textContent=language==="ar"?"English":"عربي";
+}
+
+function setStatus(msg,error=false){$("status").textContent=msg;$("status").className=error?"status error":"status";}
+function money(n){return Math.ceil(n/5)*5;}
+function fmt(n){return Number(n).toLocaleString("en-US",{maximumFractionDigits:2});}
+
+function renderOptions(){
+ const mats=PRICING_CATALOG[process];
+ let html='<div class="field"><label>Material</label><select id="material">'+Object.entries(mats).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("")+'</select></div>';
+ html+='<div class="field"><label>Color</label><select id="color"></select></div>';
+ if(process==="laser"){
+   html+='<div class="field"><label>Thickness</label><select id="thickness"></select></div>';
+   html+='<div class="field"><label>Finishing</label><select id="finishing"><option value="standard">Standard</option><option value="premium">Premium</option></select></div>';
+   html+='<div class="field"><label>Part Length (cm)</label><input id="laser-length" type="number" min="0.1" step="0.1" placeholder="60"></div>';
+   html+='<div class="field"><label>Part Width (cm)</label><input id="laser-width" type="number" min="0.1" step="0.1" placeholder="60"></div>';
+ }else{
+   html+='<div class="field"><label>Layer Height</label><select id="layer_height"><option value=".28">0.28 mm / Fast</option><option value=".20" selected>0.20 mm / Standard</option><option value=".16">0.16 mm / Fine</option><option value=".12">0.12 mm / High Detail</option></select></div>';
+   html+='<div class="field"><label>Supports</label><select id="supports"><option value="Automatic">Automatic</option><option value="Required">Required</option><option value="Not Required">Not Required</option></select></div>';
+   html+='<div class="field"><label>Actual Part Weight (g)</label><input id="actual-part-weight" type="number" min="1" step="1" placeholder="Example: 1700"></div>';
+ }
+ $("options").innerHTML=html;
+ function refresh(){
+   const m=mats[$("material").value];
+   $("color").innerHTML=(m.colors||["Standard"]).map(c=>`<option value="${c}">${c}</option>`).join("");
+   if(process==="laser") $("thickness").innerHTML=(m.thicknesses||[]).map(item=>`<option value="${item.value}">${item.label}</option>`).join("");
+ }
+ $("material").addEventListener("change",refresh);refresh();if(language==="ar")translatePage();
+}
+
+
+function analyzeSTL(buffer){
+ const dv=new DataView(buffer), u8=new Uint8Array(buffer);
+ let binary=false;
+ if(dv.byteLength>=84){
+   const count=dv.getUint32(80,true);
+   binary=(84+count*50===dv.byteLength);
+ }
+ if(binary){
+   const count=dv.getUint32(80,true); let vol=0, min=[Infinity,Infinity,Infinity], max=[-Infinity,-Infinity,-Infinity];
+   for(let i=0;i<count;i++){
+     const off=84+i*50, pts=[];
+     for(let j=0;j<3;j++){
+       const p=[dv.getFloat32(off+12+j*12,true),dv.getFloat32(off+16+j*12,true),dv.getFloat32(off+20+j*12,true)];
+       // The formula above is overwritten below for correct XYZ offsets.
+       pts.push(p);
+     }
+     const a=[dv.getFloat32(off+12,true),dv.getFloat32(off+16,true),dv.getFloat32(off+20,true)];
+     const b=[dv.getFloat32(off+24,true),dv.getFloat32(off+28,true),dv.getFloat32(off+32,true)];
+     const c=[dv.getFloat32(off+36,true),dv.getFloat32(off+40,true),dv.getFloat32(off+44,true)];
+     [a,b,c].forEach(p=>p.forEach((v,k)=>{min[k]=Math.min(min[k],v);max[k]=Math.max(max[k],v)}));
+     vol+=(a[0]*(b[1]*c[2]-b[2]*c[1])-a[1]*(b[0]*c[2]-b[2]*c[0])+a[2]*(b[0]*c[1]-b[1]*c[0]))/6;
+   }
+   return {volume:Math.abs(vol),triangles:count,bbox:[max[0]-min[0],max[1]-min[1],max[2]-min[2]]};
+ }
+ const text=new TextDecoder().decode(u8);
+ const vs=[...text.matchAll(/vertex\s+([+-]?\d*\.?\d+(?:e[+-]?\d+)?)\s+([+-]?\d*\.?\d+(?:e[+-]?\d+)?)\s+([+-]?\d*\.?\d+(?:e[+-]?\d+)?)/gi)].map(m=>m.slice(1).map(Number));
+ let vol=0,min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
+ for(let i=0;i<vs.length;i++)vs[i].forEach((v,k)=>{min[k]=Math.min(min[k],v);max[k]=Math.max(max[k],v)});
+ for(let i=0;i+2<vs.length;i+=3){const a=vs[i],b=vs[i+1],c=vs[i+2];vol+=(a[0]*(b[1]*c[2]-b[2]*c[1])-a[1]*(b[0]*c[2]-b[2]*c[0])+a[2]*(b[0]*c[1]-b[1]*c[0]))/6;}
+ return vs.length>=3?{volume:Math.abs(vol),triangles:Math.floor(vs.length/3),bbox:[max[0]-min[0],max[1]-min[1],max[2]-min[2]]}:null;
+}
+
+function analyzeOBJ(text){
+ const verts=[], faces=[];
+ for(const line of text.split(/\r?\n/)){
+   const s=line.trim();
+   if(/^v\s+/i.test(s)){const p=s.split(/\s+/).slice(1,4).map(Number);if(p.length===3&&p.every(Number.isFinite))verts.push(p);}
+   else if(/^f\s+/i.test(s)){
+     const ids=s.split(/\s+/).slice(1).map(x=>parseInt(x.split("/")[0],10)).filter(Number.isFinite);
+     if(ids.length>=3) for(let i=1;i<ids.length-1;i++)faces.push([ids[0],ids[i],ids[i+1]]);
+   }
+ }
+ if(!verts.length||!faces.length)return null;
+ let vol=0,min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
+ verts.forEach(p=>p.forEach((v,k)=>{min[k]=Math.min(min[k],v);max[k]=Math.max(max[k],v)}));
+ for(const f of faces){const a=verts[f[0]-1],b=verts[f[1]-1],c=verts[f[2]-1];if(a&&b&&c)vol+=(a[0]*(b[1]*c[2]-b[2]*c[1])-a[1]*(b[0]*c[2]-b[2]*c[0])+a[2]*(b[0]*c[1]-b[1]*c[0]))/6;}
+ return {volume:Math.abs(vol),triangles:faces.length,bbox:[max[0]-min[0],max[1]-min[1],max[2]-min[2]]};
+}
+
+function parseDXF(text){
+ const lines=text.replace(/\r/g,"").split("\n").map(x=>x.trim());
+ const ents=[]; let i=0;
+ while(i+1<lines.length){
+   const code=Number(lines[i]), value=lines[i+1]; i+=2;
+   if(code===0) ents.push({type:value,props:{}});
+   else if(ents.length) {
+     const e=ents[ents.length-1], key=String(code);
+     if(e.props[key]===undefined)e.props[key]=value;else if(Array.isArray(e.props[key]))e.props[key].push(value);else e.props[key]=[e.props[key],value];
+   }
+ }
+ let length=0, circles=0, contours=0, min=[Infinity,Infinity],max=[-Infinity,-Infinity];
+ const addPoint=(x,y)=>{if(Number.isFinite(x)&&Number.isFinite(y)){min[0]=Math.min(min[0],x);min[1]=Math.min(min[1],y);max[0]=Math.max(max[0],x);max[1]=Math.max(max[1],y)}};
+ const num=v=>Array.isArray(v)?Number(v[0]):Number(v);
+ const addPolyline=(points,closed)=>{
+   if(points.length<2)return;
+   points.forEach(([x,y])=>addPoint(x,y));
+   for(let j=1;j<points.length;j++)length+=Math.hypot(points[j][0]-points[j-1][0],points[j][1]-points[j-1][1]);
+   if(closed&&points.length>2)length+=Math.hypot(points[0][0]-points.at(-1)[0],points[0][1]-points.at(-1)[1]);
+   contours++;
+ };
+ for(let entityIndex=0;entityIndex<ents.length;entityIndex++){
+   const e=ents[entityIndex];
+   const p=e.props;
+   if(e.type==="LINE"){
+     const x1=num(p["10"]),y1=num(p["20"]),x2=num(p["11"]),y2=num(p["21"]);
+     if([x1,y1,x2,y2].every(Number.isFinite)){length+=Math.hypot(x2-x1,y2-y1);addPoint(x1,y1);addPoint(x2,y2);contours++;}
+   } else if(e.type==="LWPOLYLINE"){
+     const xs=Array.isArray(p["10"])?p["10"]:[p["10"]], ys=Array.isArray(p["20"])?p["20"]:[p["20"]];
+     const n=Math.min(xs.length,ys.length); let pts=[];
+     for(let j=0;j<n;j++){const x=Number(xs[j]),y=Number(ys[j]);if(Number.isFinite(x)&&Number.isFinite(y)){pts.push([x,y]);addPoint(x,y)}}
+     for(let j=1;j<pts.length;j++)length+=Math.hypot(pts[j][0]-pts[j-1][0],pts[j][1]-pts[j-1][1]);
+     const closed=Number(p["70"])&1;
+     if(closed&&pts.length>2)length+=Math.hypot(pts[0][0]-pts.at(-1)[0],pts[0][1]-pts.at(-1)[1]);
+     if(pts.length>1)contours++;
+   } else if(e.type==="CIRCLE"||e.type==="ARC"){
+     const cx=num(p["10"]),cy=num(p["20"]),r=num(p["40"]);
+     if([cx,cy,r].every(Number.isFinite)){
+       let sweep=360;
+       if(e.type==="ARC"){const a1=num(p["50"]),a2=num(p["51"]);sweep=(a2-a1+360)%360||360;}
+       length+=2*Math.PI*r*(sweep/360);addPoint(cx-r,cy-r);addPoint(cx+r,cy+r);circles++;
+     }
+   } else if(e.type==="POLYLINE"){
+     const points=[];
+     for(let next=entityIndex+1;next<ents.length&&ents[next].type!=="SEQEND";next++){
+       if(ents[next].type==="VERTEX"){
+         const x=num(ents[next].props["10"]),y=num(ents[next].props["20"]);
+         if(Number.isFinite(x)&&Number.isFinite(y))points.push([x,y]);
+       }
+       entityIndex=next;
+     }
+     addPolyline(points,Boolean(Number(p["70"])&1));
+   } else if(e.type==="SPLINE"){
+     const xs=Array.isArray(p["10"])?p["10"]:[p["10"]], ys=Array.isArray(p["20"])?p["20"]:[p["20"]];
+     const points=[];
+     for(let j=0;j<Math.min(xs.length,ys.length);j++){
+       const x=Number(xs[j]),y=Number(ys[j]);
+       if(Number.isFinite(x)&&Number.isFinite(y))points.push([x,y]);
+     }
+     addPolyline(points,false);
+   }
+ }
+ if(!Number.isFinite(length)||length<=0)return null;
+ return {cutLength:length,bbox:[max[0]-min[0],max[1]-min[1]],contours,circles};
+}
+
+function parseSVG(text){
+ const paths=[...text.matchAll(/<path\b[^>]*\bd=["']([^"']+)["']/gi)].map(m=>m[1]);
+ const lines=[...text.matchAll(/<line\b[^>]*>/gi)].map(m=>m[0]);
+ const circles=[...text.matchAll(/<circle\b[^>]*>/gi)];
+ let length=0,min=[Infinity,Infinity],max=[-Infinity,-Infinity];
+ const nums=s=>[...s.matchAll(/-?\d*\.?\d+(?:e[+-]?\d+)?/gi)].map(m=>Number(m[0]));
+ const addPoint=(x,y)=>{if(Number.isFinite(x)&&Number.isFinite(y)){min[0]=Math.min(min[0],x);min[1]=Math.min(min[1],y);max[0]=Math.max(max[0],x);max[1]=Math.max(max[1],y)}};
+ for(const p of paths){const n=nums(p);for(let i=0;i<n.length;i+=2){if(i+1<n.length){addPoint(n[i],n[i+1]);if(i>=2)length+=Math.hypot(n[i]-n[i-2],n[i+1]-n[i-1]);}}}
+ for(const l of lines){const n=nums(l);if(n.length>=4){length+=Math.hypot(n[2]-n[0],n[3]-n[1]);addPoint(n[0],n[1]);addPoint(n[2],n[3]);}}
+ for(const c of circles){const n=nums(c);if(n.length>=3){const r=n.at(-1),cx=n.at(-3),cy=n.at(-2);if([cx,cy,r].every(Number.isFinite)){length+=2*Math.PI*r;addPoint(cx-r,cy-r);addPoint(cx+r,cy+r);}}}
+ const bbox=Number.isFinite(min[0])?[max[0]-min[0],max[1]-min[1]]:null;
+ return length?{cutLength:length,bbox}:null;
+}
+
+function estimatePrint(fileBuffer,m){
+ const a=analyzeSTL(fileBuffer);
+ if(!a||!a.volume||!isFinite(a.volume)) return null;
+ const infill=Number($("infill").value)/100, layer=Number($("layer_height").value);
+ const supports=$("supports").value;
+ const shellFactor=0.22 + infill*0.78;
+ const supportFactor=supports==="Required"?1.18:(supports==="Automatic"?1.08:1);
+ const effectiveVolume=a.volume*shellFactor*supportFactor;
+ const weight=effectiveVolume*m.density/1000;
+ const qualityFactor={".28":.70,".20":1,".16":1.25,".12":1.60}[layer.toFixed(2)]||1;
+ const printHours=Math.max(.20,(weight/13)*qualityFactor);
+ return {weight,printHours,volume:a.volume,bbox:a.bbox};
+}
+
+function estimatePrintFromAnalysis(a,m){
+ if(!a||!a.volume||!isFinite(a.volume))return null;
+ const infill=Number($("infill").value)/100, layer=Number($("layer_height").value), supports=$("supports").value;
+ const shellFactor=.22+infill*.78, supportFactor=supports==="Required"?1.18:(supports==="Automatic"?1.08:1);
+ const weight=a.volume*shellFactor*supportFactor*m.density/1000;
+ const qualityFactor={".28":.70,".20":1,".16":1.25,".12":1.60}[layer.toFixed(2)]||1;
+ return {weight,printHours:Math.max(.20,(weight/13)*qualityFactor),volume:a.volume,bbox:a.bbox};
+}
+
+function estimateLaser(a,m){
+ if(!a||!a.cutLength)return null;
+ const thickness=Number($("thickness").value);
+ const rate=RULES.laser.cutRate;
+ const piercingSeconds=(a.contours||a.circles||1)*RULES.laser.pierceSeconds;
+ const hours=Math.max(.03,a.cutLength/rate/60+piercingSeconds/3600);
+ // Material estimate: bounding-box sheet area with a practical nesting allowance.
+ const bw=a.bbox?.[0]||0, bh=a.bbox?.[1]||0;
+ const sheetArea=bw*bh;
+ const weight=sheetArea*thickness*m.density/1000;
+ return {cutLength:a.cutLength,weight,printHours:hours,bbox:[bw,bh],contours:a.contours||0};
+}
+
+function applyLaserDimensions(analysis,m){
+ const lengthCm=Number($("laser-length")?.value), widthCm=Number($("laser-width")?.value);
+ if(!Number.isFinite(lengthCm)||!Number.isFinite(widthCm)||lengthCm<=0||widthCm<=0)return analysis;
+ const length=lengthCm*10, width=widthCm*10, thickness=Number($("thickness").value), area=length*width;
+ return {...analysis,bbox:[length,width],weight:area*thickness*m.density/1000};
+}
+
+function applyPrintTiming(analysis){
+ return analysis;
+}
+
+function calculate(){
+ if(!file){setStatus("Select a file before calculating.",true);return;}
+ const qty=Math.max(1,Number($("quantity").value)||1), ext=file.name.toLowerCase().split(".").pop();
+
+ if(process==="laser"){
+   if(ext!=="dxf"){setStatus("Laser cutting requires a DXF file. Please upload a valid DXF only.",true);return;}
+   const lengthCm=Number($("laser-length").value), widthCm=Number($("laser-width").value);
+   if(!Number.isFinite(lengthCm)||!Number.isFinite(widthCm)||lengthCm<=0||widthCm<=0){setStatus("Please enter valid Part Length and Part Width in cm.",true);return;}
+   const materialKey=$("material").value, material=PRICING_CATALOG.laser[materialKey];
+   const thickness=Number($("thickness").value), selectedThickness=material.thicknesses.find(item=>item.value===thickness);
+   if(!selectedThickness){setStatus("Please select a valid thickness.",true);return;}
+   const areaM2=(lengthCm/100)*(widthCm/100);
+   const standardAreaM2=0.6*0.6;
+   const productionHours=Math.max(0.25, (areaM2 / standardAreaM2) * 0.5) * qty;
+   const materialCost=areaM2 * selectedThickness.pricePerM2 * qty;
+   const laborCost=productionHours * 200;
+   const subtotal=(materialCost + laborCost) * 1.35;
+   const total=money(subtotal);
+   lastQuote={quoteId:Math.random().toString(36).slice(2,10),process:"laser",materialName:material.name,thickness:selectedThickness.label,finishing:$("finishing").value,color:$("color").value,lengthCm,widthCm,quantity:qty,total,weight:areaM2*10000,time:productionHours,file:file.name,notes:$("notes").value};
+   $("price").textContent=`${fmt(total)} EGP`; $("material-result").textContent=`${fmt(areaM2*qty*10000)} cm²`; $("time-result").textContent=`${fmt(productionHours)} h`;
+   $("quote-result").classList.add("show"); $("manual").classList.remove("show"); setStatus("Quote calculated successfully.");
+   $("quote-result").scrollIntoView({behavior:"smooth",block:"nearest"});
+   return;
+ }
+
+ const allowed3D=["stl","obj","3mf"];
+ if(!allowed3D.includes(ext)){setStatus("3D printing requires a STL, OBJ, or 3MF file.",true);return;}
+ const materialKey=$("material").value, material=PRICING_CATALOG.printing[materialKey];
+ const enteredWeight=Number($("actual-part-weight").value); const estimatedWeight=Number.isFinite(enteredWeight)&&enteredWeight>0?enteredWeight:Math.max(80,file.size/1000*2.6);
+ const layer=Number($("layer_height").value)||0.2;
+ const layerFactor={".28":0.75,".20":1,".16":1.35,".12":1.8}[String(layer)] || 1;
+ const baseProductionHours=Math.max(0.5, (estimatedWeight/1000) * 0.9);
+ const productionHours=baseProductionHours * layerFactor * qty;
+ const materialCost=(estimatedWeight/1000)*material.pricePerKg*qty;
+ const laborCost=productionHours * 200;
+ const subtotal=(materialCost + laborCost) * 1.35;
+ const total=money(subtotal);
+ lastQuote={quoteId:Math.random().toString(36).slice(2,10),process:"printing",materialName:material.name,quantity:qty,total,weight:estimatedWeight,time:productionHours,file:file.name,notes:$("notes").value,color:$("color").value,layer:$("layer_height").value,supports:$("supports").value};
+ $("price").textContent=`${fmt(total)} EGP`; $("material-result").textContent=`${fmt(estimatedWeight*qty)} g`; $("time-result").textContent=`${fmt(productionHours)} h`;
+ $("quote-result").classList.add("show"); $("manual").classList.remove("show"); setStatus("Quote calculated successfully.");
+ $("quote-result").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function fillCheckout(){
+ if(!lastQuote)return;
+ const q=lastQuote;
+ const specs=q.process==="laser"?`${q.lengthCm} × ${q.widthCm} cm · ${q.thickness} · ${q.finishing} · ${q.color}`:`${q.layer} mm layer · ${q.supports} supports · ${q.color}`;
+ const materialDisplayKey="Estimated Material";
+ const materialDisplayValue=`${fmt(q.weight)} g`;
+ const items=[["File",q.file],["Process",q.process==="laser"?"Laser Cutting":"3D Printing"],["Material",q.materialName],["Specifications",specs],["Quantity",q.quantity],[materialDisplayKey,materialDisplayValue],["Estimated Production",fmt(q.time)+" h"]];
+ $("review-list").innerHTML=items.map(x=>`<div class="review-item"><span>${x[0]}</span><strong>${x[1]}</strong></div>`).join("");
+ $("review-total").textContent=fmt(q.total)+" EGP"; $("checkout").classList.add("show"); $("checkout").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function buildOrderMessage(manual=false){
+ const name=$("customer-name").value.trim(), phone=$("customer-phone").value.trim();
+ if(!name||!phone)return null;
+ if(!manual && !lastQuote)return null;
+ let text;
+ if(manual){
+  const manualSpecs=process==="laser"?`Material: ${$("material")?.selectedOptions[0]?.text||"-"}\nColor: ${$("color")?.value||"-"}\nLength × Width: ${$("laser-length")?.value||"-"} × ${$("laser-width")?.value||"-"} cm\nThickness: ${$("thickness")?.value||"-"} mm\nQuantity: ${$("quantity")?.value||"1"}`:`Material: ${$("material")?.selectedOptions[0]?.text||"-"}\nColor: ${$("color")?.value||"-"}\nLayer: ${$("layer_height")?.value||"-"} mm\nSupports: ${$("supports")?.value||"-"}\nQuantity: ${$("quantity")?.value||"1"}`;
+   text=`FORGEX — MANUAL ENGINEERING RFQ\n\nCustomer: ${name}\nCompany: ${$("customer-company").value||"-"}\nPhone/WhatsApp: ${phone}\nEmail: ${$("customer-email").value||"-"}\nCity: ${$("customer-city").value||"-"}\nFile: ${file?.name||"-"}\nProcess: ${process==="laser"?"Laser Cutting":"3D Printing"}\n${manualSpecs}\nNotes: ${$("customer-notes").value||$("notes").value||"-"}\n\nPlease review this file manually and confirm the quotation.`;
+ }else{
+  const q=lastQuote; const specs=q.process==="laser"?`Length × Width: ${q.lengthCm} × ${q.widthCm} cm\nThickness: ${q.thickness}\nFinishing: ${q.finishing}\nColor: ${q.color}`:`Layer Height: ${q.layer} mm\nSupports: ${q.supports}\nColor: ${q.color}\nEstimated Material: ${fmt(q.weight)} g`;
+  text=`FORGEX — CUSTOMER ORDER / QUOTATION\n\nOrder Request\nFile: ${q.file}\nProcess: ${q.process==="laser"?"Laser Cutting":"3D Printing"}\nMaterial: ${q.materialName}\nQuantity: ${q.quantity}\n${specs}\nEstimated Production Time: ${fmt(q.time)} h\n\nCUSTOMER\nName: ${name}\nCompany: ${$("customer-company").value||"-"}\nPhone/WhatsApp: ${phone}\nEmail: ${$("customer-email").value||"-"}\nCity: ${$("customer-city").value||"-"}\nNotes: ${$("customer-notes").value||q.notes||"-"}\n\nTOTAL CUSTOMER PRICE: ${fmt(q.total)} EGP\n\nCustomer confirmed the selected specifications.`;
+ }
+ return text;
+}
+
+async function sendOrder(manual=false){
+ const text=buildOrderMessage(manual);
+ if(!text){$("checkout-status").textContent="Please enter your name and phone/WhatsApp.";return;}
+ if(file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+   navigator.share({title:"FORGEX Order",text,files:[file]}).catch(()=>window.open(`https://wa.me/${FORGEX_WHATSAPP}?text=${encodeURIComponent(text)}`,"_blank","noopener"));
+ } else {
+   window.open(`https://wa.me/${FORGEX_WHATSAPP}?text=${encodeURIComponent(text)}`,"_blank","noopener");
+ }
+ $("checkout-status").textContent="Order details are ready to send on WhatsApp.";
+}
+
+function startPayment(){
+ $("checkout-status").textContent="Payment is not connected in this static prototype yet.";
+}
+
+function setProcess(p){
+ process=p; document.querySelectorAll(".process").forEach(x=>x.classList.toggle("selected",x.querySelector("input").value===p));
+ $("file").accept=p==="laser"?".dxf":".stl,.obj,.3mf";
+ $("formats").textContent=p==="laser"?"Supported: DXF only. The file is attached to the order for FORGEX review and the quote is based on the selected material, dimensions, and operating time.":"Supported: STL / OBJ / 3MF. Estimated weight and time are approximate unless a real slicer is connected.";
+ file=null;$("file").value="";$("file-result").classList.remove("visible");$("quote-result").classList.remove("show");$("manual").classList.remove("show");renderOptions();
+}
+document.querySelectorAll("input[name=process]").forEach(i=>i.addEventListener("change",e=>setProcess(e.target.value)));
+document.querySelectorAll("[data-process]").forEach(a=>a.addEventListener("click",()=>setTimeout(()=>setProcess(a.dataset.process),50)));
+$("file").addEventListener("change",e=>{file=e.target.files[0];if(file){$("file-name").textContent=file.name;$("file-size").textContent=(file.size/1048576).toFixed(2)+" MB";$("file-result").classList.add("visible");}});
+$("dropzone").addEventListener("dragover",e=>{e.preventDefault();$("dropzone").style.borderColor="var(--red)"});
+$("dropzone").addEventListener("dragleave",()=>{$("dropzone").style.borderColor="#555"});
+$("dropzone").addEventListener("drop",e=>{e.preventDefault();$("dropzone").style.borderColor="#555";const f=e.dataTransfer.files[0];if(f){file=f;$("file-name").textContent=f.name;$("file-size").textContent=(f.size/1048576).toFixed(2)+" MB";$("file-result").classList.add("visible")}});
+$("remove-file").addEventListener("click",()=>{file=null;$("file").value="";$("file-result").classList.remove("visible");$("quote-result").classList.remove("show")});
+$("calculate").addEventListener("click",calculate);$("continue").addEventListener("click",fillCheckout);
+$("reset").addEventListener("click",()=>{$("quote-result").classList.remove("show");$("checkout").classList.remove("show");$("manual").classList.remove("show");setStatus("Quote reset.")});
+$("send-order").addEventListener("click",()=>{if(!$("spec-confirmed").checked){$("checkout-status").textContent="Please confirm the selected specifications first.";return;}sendOrder(false)});
+$("pay-now").addEventListener("click",startPayment);
+$("manual-whatsapp").addEventListener("click",()=>{$("checkout").classList.add("show");$("checkout").scrollIntoView({behavior:"smooth"});$("send-order").onclick=()=>sendOrder(true)});
+$("language-toggle").addEventListener("click",()=>{language=language==="ar"?"en":"ar";translatePage();});
+renderOptions();
+</script>
+</body></html>
