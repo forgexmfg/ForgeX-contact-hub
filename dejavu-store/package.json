@@ -1,0 +1,8 @@
+{
+  "name": "dejavu-decor-store",
+  "private": true,
+  "scripts": {
+    "products:import": "node import-products.js",
+    "products:dry-run": "node import-products.js --dry-run"
+  }
+}

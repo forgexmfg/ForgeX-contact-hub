@@ -1,0 +1,2 @@
+id,name,category,categoryId,description,price,material,style,dimensions,image,available,featured,bestseller,customizable
+example-product,Example Product,Wall art,wall-art,Short useful product description,600,Wood,Modern,40 x 60 cm,example.jpg,true,true,false,false

@@ -43,28 +43,28 @@ window.DEJAVU_DATA = {
   ],
   products: [
     {
-  id: 'Lady Justice',name: 'Lady Justice',category: 'Wall art',categoryId: 'wall-art',
+  id: 'lady-justice',name: 'Lady Justice',category: 'Wall art',categoryId: 'wall-art',
   description: 'A personalized Arabic name piece, made to order.',
   price: 600, material: 'Laser-cut wood',style: 'Personalized',
   dimensions: '50–50 cm',image: '../assets/w05.jpg',
   available: true,featured: true,bestseller: true,customizable: true
     },
     {
-  id: 'scales of justice',name: 'scales of justice',category: 'Wall art',categoryId: 'wall-art',
+  id: 'scales-of-justice',name: 'scales of justice',category: 'Wall art',categoryId: 'wall-art',
   description: 'A personalized Arabic name piece, made to order.',
   price: 600, material: 'Laser-cut wood',style: 'Personalized',
   dimensions: '50–50 cm',image: '../assets/w06.jpg',
   available: true,featured: true,bestseller: true,customizable: true
     },
     {
-  id: 'scales of justice',name: 'scales of justice',category: 'Wall art',categoryId: 'wall-art',
+  id: 'scales-of-justice-triptych',name: 'scales of justice',category: 'Wall art',categoryId: 'wall-art',
   description: 'A personalized Arabic name piece, made to order.',
   price: 600, material: 'Laser-cut wood',style: 'Personalized',
   dimensions: 'Set of 3. 50–50 cm',image: '../assets/w08.jpg',
   available: true,featured: true,bestseller: true,customizable: true
     },
     {
-  id: 'scales of justice Custom ',name: 'scales of justice Custom ',category: 'Wall art',categoryId: 'wall-art',
+  id: 'scales-of-justice-custom',name: 'scales of justice Custom ',category: 'Wall art',categoryId: 'wall-art',
   description: 'A personalized Arabic name piece, made to order.',
   price: 600, material: 'Laser-cut wood',style: 'Personalized',
   dimensions: '50–50 cm',image: '../assets/w07.jpg',
@@ -207,6 +207,54 @@ window.DEJAVU_DATA = {
       description: 'Three elegant line-art portraits with floral accents, arranged as a coordinated wall set.',
       price: 600, material: 'Decorative metal', style: 'Modern', dimensions: 'Set of 3',
       image: '../assets/dejavu-floral-women-trio.jpg', available: true, featured: false, bestseller: false, customizable: false
+    },
+    {
+      id: 'quran-wall-stand', name: 'Quran Stand Wall Decor', category: 'Wall art', categoryId: 'wall-art',
+      description: 'A warm wooden wall piece for displaying the Quran, decorated with a crescent and lantern details.',
+      price: 950, material: 'Laser-cut wood', style: 'Islamic decor', dimensions: 'Approx. 45 × 70 cm',
+      image: '../assets/dejavu-quran-wall-stand.jpg', available: true, featured: true, bestseller: true, customizable: false
+    },
+    {
+      id: 'multi-purpose-desk-organizer', name: 'Personalized Multi-Use Desk Organizer', category: 'Gifts', categoryId: 'gifts',
+      description: 'A wooden desktop organizer for a phone, watch, pen, and accessories, personalized with a name.',
+      price: 400, material: 'Natural wood', style: 'Personalized gift', dimensions: 'Approx. 25 × 18 cm',
+      image: '../assets/dejavu-multi-purpose-desk-organizer.jpg', available: true, featured: true, bestseller: true, customizable: true
+    },
+    {
+      id: 'lawyer-desk-sign', name: 'Personalized Lawyer Desk Sign', category: 'Personalized', categoryId: 'personalized',
+      description: 'A custom wooden desk nameplate with a scales emblem, ideal for lawyers and legal offices.',
+      price: 950, material: 'Wood', style: 'Professional gift', dimensions: 'Approx. 40 × 18 cm',
+      image: '../assets/dejavu-lawyer-desk-sign.jpg', available: true, featured: true, bestseller: false, customizable: true
+    },
+    {
+      id: 'kitchen-wall-set', name: 'Kitchen Wall Decor Set', category: 'Wall art', categoryId: 'wall-art',
+      description: 'A complete kitchen wall set featuring Cook, Coffee, Tea, utensils, pineapple, and heart details.',
+      price: 650, material: 'Decorative metal', style: 'Kitchen decor', dimensions: 'Set of 8 pieces',
+      image: '../assets/dejavu-kitchen-wall-set.jpg', available: true, featured: true, bestseller: false, customizable: true
+    },
+    {
+      id: 'islamic-alhamdulillah-subhanallah-set', name: 'Alhamdulillah & Subhanallah Frame Set', category: 'Frames', categoryId: 'frames',
+      description: 'A pair of elegant Islamic phrase wall frames with intricate patterned panels.',
+      price: 850, material: 'Wood and acrylic', style: 'Islamic decor', dimensions: 'Set of 2',
+      image: '../assets/dejavu-islamic-alhamdulillah-subhanallah-set.jpg', available: true, featured: true, bestseller: false, customizable: false
+    },
+    {
+      id: 'portrait-gift-set', name: 'Custom Engraved Portrait Gift Set', category: 'Gifts', categoryId: 'gifts',
+      description: 'Personalized wooden portraits and a desk frame engraved from customer photos for a meaningful gift.',
+      price: 550, material: 'Engraved wood', style: 'Personalized gift', dimensions: 'Set with 3 portrait pieces',
+      image: '../assets/dejavu-portrait-gift-set.jpg', available: true, featured: true, bestseller: true, customizable: true
+    },
+    {
+      id: 'kids-painting-box', name: 'Wooden Kids Painting Activity Box', category: 'Gifts', categoryId: 'gifts',
+      description: 'Paintable wooden animal characters with brushes and colors for a creative children’s activity.',
+      price: 199, material: 'Wood and paints', style: 'Kids activity', dimensions: 'Set of 2 boxes',
+      image: '../assets/dejavu-kids-painting-box.jpg', available: true, featured: true, bestseller: false, customizable: true
+    },
+    {
+      id: 'christmas-xo-board', name: 'Christmas XO Painting Game Board', category: 'Gifts', categoryId: 'gifts',
+      description: 'A family-friendly wooden Christmas XO board with paintable house, tree, and Santa pieces.',
+      price: 249, material: 'Wood and paint', style: 'Christmas activity', dimensions: 'Approx. 30 × 24 cm',
+      image: '../assets/dejavu-christmas-xo-board.jpg', available: true, featured: true, bestseller: false, customizable: true
     }
   ],
   testimonials: [

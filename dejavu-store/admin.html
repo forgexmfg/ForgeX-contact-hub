@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1a24">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data:; img-src 'self' data: blob: https://*; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self'; connect-src 'self'">
+  <title>Management | Dejavu Decor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="store.css">
+  <script src="data.js" defer></script>
+  <script src="store.js" defer></script>
+  <script src="admin.js" defer></script>
+</head>
+<body data-page="admin">
+  <div id="site-header"></div>
+  <main class="section-wrap admin-login" data-admin-login>
+    <form class="admin-login-card" data-login-form>
+      <p class="eyebrow">Private area</p>
+      <h1>تسجيل دخول الإدارة</h1>
+      <label>اسم المستخدم<input name="username" autocomplete="username" required></label>
+      <label>كلمة السر<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="button button-light" type="submit">دخول</button>
+      <p class="admin-message" data-login-message></p>
+    </form>
+  </main>
+  <main class="section-wrap admin-page">
+    <div class="page-intro">
+      <p class="eyebrow">Store management</p>
+      <h1>إدارة المتجر</h1>
+      <p>اكتب بيانات المنتج وارفع صورته؛ هتظهر مباشرة في المتجر على هذا الجهاز.</p>
+    </div>
+
+    <div class="management-tabs" role="tablist" aria-label="Store management">
+      <button type="button" class="management-tab is-active" role="tab" aria-selected="true" data-management-tab="add">إضافة منتج</button>
+      <button type="button" class="management-tab" role="tab" aria-selected="false" data-management-tab="edit">تعديل منتج</button>
+    </div>
+
+    <div class="admin-layout" data-add-panel>
+      <form class="admin-form" data-product-form>
+        <label>اسم المنتج<input name="name" required placeholder="مثال: ساعة حائط خشبية"></label>
+        <div class="admin-field-row">
+          <label>السعر الأصلي (جنيه)<input name="price" type="number" min="1" required placeholder="600"></label>
+          <label>السعر بعد الخصم (جنيه)<input name="salePrice" type="number" min="1" placeholder="اختياري"></label>
+          <label>الفئة
+            <select name="categoryId" required>
+              <option value="wall-art">Wall art</option>
+              <option value="personalized">Personalized</option>
+              <option value="frames">Frames</option>
+              <option value="gifts">Gifts</option>
+              <option value="laser-wood">Laser wood</option>
+              <option value="3d-printing">3D printing</option>
+            </select>
+          </label>
+        </div>
+        <label>الوصف القصير<textarea name="description" required rows="4" placeholder="اكتب وصفًا واضحًا للمنتج ومميزاته"></textarea></label>
+        <div class="admin-field-row">
+          <label>الخامة<input name="material" required placeholder="خشب / معدن / أكريليك"></label>
+          <label>الستايل<input name="style" required placeholder="Modern / Islamic / Gift"></label>
+        </div>
+        <label>المقاس أو أبعاد المنتج<input name="dimensions" placeholder="40 × 60 cm"></label>
+        <label class="admin-upload">
+          <span>صورة المنتج</span>
+          <input name="image" type="file" accept="image/*" required>
+        </label>
+        <div class="admin-checks">
+          <label><input name="featured" type="checkbox"> Featured</label>
+          <label><input name="bestseller" type="checkbox"> Bestseller</label>
+          <label><input name="customizable" type="checkbox"> قابل للتخصيص</label>
+          <label><input name="discountActive" type="checkbox"> تفعيل الخصم</label>
+        </div>
+        <label>تاريخ ووقت انتهاء العرض
+          <input name="saleEnds" type="datetime-local">
+        </label>
+        <button class="button button-light" type="submit">إضافة المنتج</button>
+        <p class="admin-message" data-admin-message></p>
+      </form>
+
+      <aside class="admin-list">
+        <div class="admin-list-heading">
+          <h2>المنتجات المضافة</h2>
+          <button type="button" class="text-link" data-export-products>تصدير نسخة احتياطية</button>
+        </div>
+        <div data-added-products></div>
+        <button type="button" class="text-link admin-logout" data-admin-logout>تسجيل الخروج</button>
+      </aside>
+    </div>
+    <section class="edit-panel" data-edit-panel hidden>
+      <div class="edit-panel-heading">
+        <div>
+          <p class="eyebrow">Select a product</p>
+          <h2>كل المنتجات</h2>
+        </div>
+        <input class="edit-search" type="search" placeholder="ابحث عن منتج..." data-edit-search>
+      </div>
+      <div class="edit-product-grid" data-edit-grid></div>
+      <div class="edit-workspace" data-edit-workspace hidden>
+        <button type="button" class="text-link" data-back-to-products><i class="fa-solid fa-arrow-right"></i> الرجوع لكل المنتجات</button>
+        <div data-edit-form-mount></div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

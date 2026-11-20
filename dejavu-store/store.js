@@ -2,12 +2,60 @@
 (() => {
   const data = window.DEJAVU_DATA;
   if (!data) return;
+  try {
+    const savedProducts = JSON.parse(localStorage.getItem('dejavu-custom-products-v1') || '[]');
+    if (Array.isArray(savedProducts) && savedProducts.length) {
+      const sanitizedSavedProducts = savedProducts.filter(product =>
+        product &&
+        typeof product.id === 'string' &&
+        typeof product.name === 'string' &&
+        Number.isFinite(Number(product.price))
+      ).map(product => ({
+        ...product,
+        id: product.id.slice(0, 100),
+        name: String(product.name).slice(0, 120),
+        description: String(product.description || '').slice(0, 500),
+        price: Math.max(1, Number(product.price)),
+        salePrice: Number(product.salePrice) > 0 ? Number(product.salePrice) : null,
+        image: /^data:image\/(jpeg|png);base64,/i.test(String(product.image || '')) ||
+          /^(\.\.\/)?assets\//.test(String(product.image || ''))
+          ? String(product.image).slice(0, 1000000)
+          : '../assets/dejavu-logo.png'
+      }));
+      const savedIds = new Set(sanitizedSavedProducts.map(product => product.id));
+      data.products = [
+        ...sanitizedSavedProducts,
+        ...data.products.filter(product => !savedIds.has(product.id))
+      ];
+    }
+  } catch {}
 
   const page = document.body.dataset.page;
   const cartKey = 'dejavu-cart-v1';
   const wishlistKey = 'dejavu-wishlist-v1';
   const money = amount => `EGP ${Number(amount).toLocaleString('en-EG')}`;
   const priceValue = amount => Number(amount).toLocaleString('en-EG');
+  const saleIsActive = product => {
+    if (!product?.discountActive || !product.salePrice || product.salePrice >= product.price) return false;
+    if (!product.saleEnds) return true;
+    return new Date(product.saleEnds).getTime() > Date.now();
+  };
+  const effectivePrice = product => saleIsActive(product) ? Number(product.salePrice) : Number(product?.price || 0);
+  const countdownMarkup = product => {
+    if (!saleIsActive(product) || !product.saleEnds) return '';
+    return `<div class="sale-countdown" data-sale-countdown="${escapeHtml(product.saleEnds)}" aria-label="Sale countdown">
+      <span><b data-count-days>00</b><small>يوم</small></span>
+      <span><b data-count-hours>00</b><small>ساعة</small></span>
+      <span><b data-count-minutes>00</b><small>دقيقة</small></span>
+      <span><b data-count-seconds>00</b><small>ثانية</small></span>
+    </div>`;
+  };
+  const priceMarkup = product => {
+    if (saleIsActive(product)) {
+      return `<span class="price-before">${priceValue(product.price)} <small>EGP</small></span><span class="price-after">${priceValue(product.salePrice)} <small>EGP</small></span>`;
+    }
+    return `${priceValue(product.price)} <small>EGP</small>`;
+  };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
   const productById = id => data.products.find(product => product.id === id);
   const readStore = key => {
@@ -103,11 +151,13 @@
     return `<article class="product-card">
       <a class="product-image" href="product.html?id=${encodeURIComponent(product.id)}" aria-label="View ${escapeHtml(product.name)}">
         <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)} displayed in a styled interior" loading="lazy">
+        ${saleIsActive(product) ? `<span class="sale-ribbon"><b>خصم ${Math.round((1 - product.salePrice / product.price) * 100)}%</b><small>عرض خاص</small></span>` : ''}
         ${product.available ? '' : '<span class="unavailable">Made to order</span>'}
       </a>
       <button class="wishlist-toggle" type="button" data-wishlist="${escapeHtml(product.id)}" aria-label="Add ${escapeHtml(product.name)} to wishlist" aria-pressed="${wished}"><i class="${wished ? 'fa-solid' : 'fa-regular'} fa-heart" aria-hidden="true"></i></button>
       <div class="product-info"><span class="product-category">${escapeHtml(product.category)}</span><a href="product.html?id=${encodeURIComponent(product.id)}"><h3>${escapeHtml(product.name)}</h3></a>
-        <p class="product-price">${priceValue(product.price)} <small>EGP</small></p>
+        <p class="product-price">${priceMarkup(product)}</p>
+        ${countdownMarkup(product)}
         <div class="product-actions"><button class="add-button" type="button" data-add-to-cart="${escapeHtml(product.id)}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add to bag</button><button class="quick-view" type="button" data-quick-view="${escapeHtml(product.id)}" aria-label="Quick view ${escapeHtml(product.name)}"><i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i></button></div>
       </div>
     </article>`;
@@ -148,14 +198,14 @@
       const bounds = price === 'all' ? null : price.split('-').map(Number);
       return (!value || `${product.name} ${product.category} ${product.description}`.toLowerCase().includes(value))
         && (document.querySelector('[data-filter="category"]').value === 'all' || product.categoryId === document.querySelector('[data-filter="category"]').value)
-        && (!bounds || (product.price >= bounds[0] && product.price <= bounds[1]))
+        && (!bounds || (effectivePrice(product) >= bounds[0] && effectivePrice(product) <= bounds[1]))
         && (document.querySelector('[data-filter="material"]').value === 'all' || product.material === document.querySelector('[data-filter="material"]').value)
         && (document.querySelector('[data-filter="style"]').value === 'all' || product.style === document.querySelector('[data-filter="style"]').value)
         && (!document.querySelector('[data-filter="availability"]').checked || product.available);
     });
     const sort = document.querySelector('[data-filter="sort"]').value;
-    if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
-    if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+    if (sort === 'price-asc') filtered.sort((a,b) => effectivePrice(a) - effectivePrice(b));
+    if (sort === 'price-desc') filtered.sort((a,b) => effectivePrice(b) - effectivePrice(a));
     if (sort === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
     document.querySelector('[data-shop-grid]').innerHTML = filtered.map(productCard).join('');
     document.querySelector('[data-result-count]').textContent = `${filtered.length} ${filtered.length === 1 ? 'piece' : 'pieces'}`;
@@ -180,7 +230,7 @@
       <div class="product-gallery"><figure class="product-main-image"><img data-main-product-image src="${escapeHtml(gallery[0])}" alt="${escapeHtml(product.name)}" fetchpriority="high"></figure>
         <div class="product-thumbnails">${gallery.map((image,index) => `<button class="product-thumb" type="button" data-product-image="${escapeHtml(image)}" aria-label="View product image ${index + 1}" aria-current="${index === 0}"><img src="${escapeHtml(image)}" alt="" loading="lazy"></button>`).join('')}</div>
       </div>
-      <div class="product-summary"><p class="eyebrow">${escapeHtml(product.category)}</p><h1>${escapeHtml(product.name)}</h1><p class="product-price">${priceValue(product.price)} <small>EGP</small></p>
+      <div class="product-summary"><p class="eyebrow">${escapeHtml(product.category)}</p><h1>${escapeHtml(product.name)}</h1><p class="product-price">${priceMarkup(product)}</p>${countdownMarkup(product)}
         <p class="product-description">${escapeHtml(product.description)}</p>
         <div class="product-specs"><span>Material<b>${escapeHtml(product.material)}</b></span><span>Dimensions<b>${escapeHtml(product.dimensions)}</b></span></div>
         ${customization}
@@ -197,10 +247,9 @@
     const product = productById(id);
     if (!product) return;
     const cart = readStore(cartKey);
-    const detailKey = customization ? JSON.stringify(customization) : '';
     const existing = cart.find(item => item.id === id && JSON.stringify(item.customization || null) === JSON.stringify(customization));
     if (existing) existing.quantity += quantity;
-    else cart.push({ id, quantity, customization, detailKey });
+    else cart.push({ id, quantity, customization });
     writeStore(cartKey, cart);
     updateCart();
     showToast(`${product.name} added to your bag`);
@@ -219,15 +268,15 @@
         const product = productById(item.id);
         if (!product) return '';
         const details = item.customization ? Object.entries(item.customization).filter(([,value]) => value).map(([key,value]) => `${escapeHtml(key)}: ${escapeHtml(value)}`).join(' · ') : '';
-        return `<article class="cart-item"><img src="${escapeHtml(product.image)}" alt="" loading="lazy"><div><h3>${escapeHtml(product.name)}</h3><p>${money(product.price)} · Qty ${item.quantity}</p>${details ? `<small>${details}</small>` : ''}<div class="cart-item-controls"><button type="button" data-cart-change="-1" data-cart-index="${index}" aria-label="Decrease ${escapeHtml(product.name)}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-index="${index}" aria-label="Increase ${escapeHtml(product.name)}">+</button></div></div><button class="cart-remove" type="button" data-cart-remove="${index}" aria-label="Remove ${escapeHtml(product.name)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></article>`;
+        return `<article class="cart-item"><img src="${escapeHtml(product.image)}" alt="" loading="lazy"><div><h3>${escapeHtml(product.name)}</h3><p>${money(effectivePrice(product))} · Qty ${item.quantity}</p>${details ? `<small>${details}</small>` : ''}<div class="cart-item-controls"><button type="button" data-cart-change="-1" data-cart-index="${index}" aria-label="Decrease ${escapeHtml(product.name)}">−</button><span>${item.quantity}</span><button type="button" data-cart-change="1" data-cart-index="${index}" aria-label="Increase ${escapeHtml(product.name)}">+</button></div></div><button class="cart-remove" type="button" data-cart-remove="${index}" aria-label="Remove ${escapeHtml(product.name)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></article>`;
       }).join('');
     }
-    const subtotal = cart.reduce((total,item) => total + (productById(item.id)?.price || 0) * item.quantity, 0);
+    const subtotal = cart.reduce((total,item) => total + effectivePrice(productById(item.id) || {}) * item.quantity, 0);
     document.querySelector('[data-cart-subtotal]').textContent = money(subtotal);
     const message = ['Hello Dejavu Decor, I would like to order:', ...cart.map(item => {
       const product = productById(item.id);
       const extra = item.customization ? ` (${Object.entries(item.customization).filter(([,value])=>value).map(([key,value])=>`${key}: ${value}`).join(', ')})` : '';
-      return `- ${product?.name || item.id} x ${item.quantity}${extra} — ${money((product?.price || 0) * item.quantity)}`;
+      return `- ${product?.name || item.id} x ${item.quantity}${extra} — ${money(effectivePrice(product || {}) * item.quantity)}`;
     }), `Subtotal: ${money(subtotal)}`].join('\n');
     document.querySelector('[data-checkout]').href = `https://wa.me/${data.brand.whatsapp}?text=${encodeURIComponent(message)}`;
   }
@@ -267,7 +316,7 @@
       if (target.matches('[data-quick-view]')) {
         const product = productById(target.dataset.quickView);
         if (product) {
-          document.querySelector('[data-quick-view-content]').innerHTML = `<button class="drawer-close quick-view-close" type="button" data-quick-view-close aria-label="Close quick view"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button><img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}"><div><p class="eyebrow">${escapeHtml(product.category)}</p><h2 id="quick-view-title">${escapeHtml(product.name)}</h2><p class="product-price">${priceValue(product.price)} <small>EGP</small></p><p class="product-description">${escapeHtml(product.description)}</p><div class="quick-view-actions"><button class="button button-light" type="button" data-quick-view-add="${escapeHtml(product.id)}">Add to bag</button><a class="button button-outline" href="product.html?id=${encodeURIComponent(product.id)}">View details</a></div></div>`;
+          document.querySelector('[data-quick-view-content]').innerHTML = `<button class="drawer-close quick-view-close" type="button" data-quick-view-close aria-label="Close quick view"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button><img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}"><div><p class="eyebrow">${escapeHtml(product.category)}</p><h2 id="quick-view-title">${escapeHtml(product.name)}</h2><p class="product-price">${priceMarkup(product)}</p>${countdownMarkup(product)}<p class="product-description">${escapeHtml(product.description)}</p><div class="quick-view-actions"><button class="button button-light" type="button" data-quick-view-add="${escapeHtml(product.id)}">Add to bag</button><a class="button button-outline" href="product.html?id=${encodeURIComponent(product.id)}">View details</a></div></div>`;
           document.querySelector('[data-quick-view-dialog]').showModal();
         }
       }
@@ -343,12 +392,40 @@
     document.body.classList.toggle('cart-open',open);
   }
 
+  function updateCountdowns() {
+    let expired = false;
+    document.querySelectorAll('[data-sale-countdown]').forEach(counter => {
+      let remaining = new Date(counter.dataset.saleCountdown).getTime() - Date.now();
+      if (remaining <= 0) {
+        expired = true;
+        counter.remove();
+        return;
+      }
+      const totalSeconds = Math.floor(remaining / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      counter.querySelector('[data-count-days]').textContent = String(days).padStart(2, '0');
+      counter.querySelector('[data-count-hours]').textContent = String(hours).padStart(2, '0');
+      counter.querySelector('[data-count-minutes]').textContent = String(minutes).padStart(2, '0');
+      counter.querySelector('[data-count-seconds]').textContent = String(seconds).padStart(2, '0');
+    });
+    if (expired) {
+      document.querySelectorAll('.sale-ribbon').forEach(ribbon => ribbon.remove());
+      clearInterval(window.__dejavuCountdownInterval);
+      setTimeout(() => location.reload(), 300);
+    }
+  }
+
   function init() {
     renderHeader(); renderFooter(); ensureOverlays();
     if (page==='home') renderHome();
     if (page==='shop') renderShop();
     if (page==='product') renderProduct();
     initEvents(); updateCart(); updateWishlist();
+    updateCountdowns();
+    window.__dejavuCountdownInterval = setInterval(updateCountdowns, 1000);
   }
 
   document.addEventListener('DOMContentLoaded', init, { once: true });

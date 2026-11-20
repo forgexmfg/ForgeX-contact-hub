@@ -16,3 +16,13 @@ The official Dejavu logo is `../assets/dejavu-logo.png` and is used unchanged in
 The cart and wishlist are stored in the visitor's browser. The cart builds an order summary for WhatsApp, including product, quantity, and customization text. If a reference file is selected, the customer is prompted to send it in the WhatsApp chat. Online payments, accounts, inventory synchronization, and newsletter subscriptions require a backend and are not connected in this static preview.
 
 The catalog includes 16 additional product photos stored in `../assets/dejavu-*.jpg`; each image is connected to its product in `data.js`. Prices for these new listings are starter values and should be confirmed before taking orders.
+
+## Fast product import
+
+1. Put product images in `incoming/`.
+2. Copy `new-products-template.csv` to `new-products.csv`.
+3. Fill one row per product. Set `image` to the exact filename inside `incoming/`.
+4. In the terminal, run `node import-products.js --dry-run` to check the file.
+5. Run `node import-products.js` to copy the images and append the products to `data.js`.
+
+The importer creates unique Dejavu asset names and skips duplicate `id` values or missing images.
